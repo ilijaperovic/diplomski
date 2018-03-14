@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Ilija Perovic - Diplomski rad</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link  href="{{ url_for('static', filename='css/materialize.css') }}" rel="stylesheet" type="text/css" media="screen,projection">
+  <link  href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" media="screen,projection">
+
+  <!-- JS -->
+  <script src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/highcharts-more.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/exporting.js') }}"></script>
+
+  <style>
+    .card-panel{
+      margin: 0;
+    }
+    .section{
+      padding-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><i class="material-icons dp48">home</i>Smarthome</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="{{ url_for('index') }}">History</a></li>
+        <li><a href="{{ url_for('live') }}">Live</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="{{ url_for('index') }}">History</a></li>
+        <li><a href="{{ url_for('live') }}">Live</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  <div class="section no-pad-bot" id="index-banner">
+
+  </div>
+
+
+  <div class="container" style="height: 100vh">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row">
+
+        <div class="col s6 m8 card-panel purple darken-1" style="border-right: 3px solid white; border-bottom: 3px solid white">
+          <div class="icon-block">
+            <div class="row center">
+                <h4 class="left white-text text-darken-2" id="my_city">
+                  {% if datetime_info %}
+                    {{ datetime_info.city }}
+                  {% endif %}
+                </h4>
+                <h5 class="right white-text text-darken-2" id="my_time">
+                  {% if datetime_info %}
+                    {{ datetime_info.time }}
+                  {% endif %}
+                </h5>
+            </div>
+            <div class="row center">
+                <img class="header center" src="{{ url_for('static', filename = 'home.png') }}" title="temperature" style="width:100px;margin-top:20px">
+            </div>
+            <h5 class="left white-text" style="margin-top:11px" id="my_date">
+              {% if datetime_info %}
+                {{ datetime_info.date }}
+              {% endif %}
+            </h5>
+          </div>
+        </div>
+
+        <div class="col s6 m4 card-panel red" style="border-bottom: 3px solid white">
+          <div class="icon-block">
+            <h5 class="center white-text text-darken-2">Switch light</h5>
+
+            <div class="row center">
+                <img class="header center" src="{{ url_for('static', filename = 'light_on_of.png') }}" title="Turn on" style="width:100px;margin-top:20px;cursor:pointer" onclick=switchLight()>
+                <h3 class="center white-text" id="current_light_on_off">{{ current_light_on_off }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6 m4 card-panel teal lighten-2" style="border-right: 3px solid white;">
+          <div class="icon-block">
+            <h5 class="center white-text text-darken-2">Temperature</h5>
+
+            <div class="row center">
+                <img class="header center" src="{{ url_for('static', filename = 'temperature.png') }}" title="temperature" style="width:100px;margin-top:20px">
+              <h3 class="center white-text"><span id="current_temperature">{{ current_temperature }}</span><span style="font-size: 22px;"> °C</span></h3>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6 m4 card-panel light-blue darken-2" style="border-right: 3px solid white;">
+          <div class="icon-block">
+            <h5 class="center white-text text-darken-2">Humidity</h5>
+
+            <div class="row center">
+                <img class="header center" src="{{ url_for('static', filename = 'humidity.png') }}" title="humidity" style="width:100px;margin-top:20px">
+              <h3 class="center white-text"><span id="current_humidity">{{ current_humidity }}</span><span style="font-size: 22px;"> %</span></h3>
+
+            </div>
+          </div>
+        </div>
+
+      <div class="col s6 m4 card-panel yellow darken-3">
+          <div class="icon-block">
+            <h5 class="center white-text text-darken-2">Light</h5>
+
+            <div class="row center">
+                <img class="header center" src="{{ url_for('static', filename = 'light.png') }}" title="light" style="width:100px;margin-top:20px">
+              <h3 class="center white-text"><span id="current_flux">{{ current_flux }}</span><span style="font-size: 22px;"> lum</span></h3>
+
+            </div>
+          </div>
+      </div>
+
+      </div>
+
+    </div>
+    <br><br>
+  </div>
+
+  <footer class="page-footer orange">
+    <div class="footer-copyright">
+      <div class="container">
+        <a class="orange-text text-lighten-3" href="#">Ilija Perović</a>
+      </div>
+    </div>
+  </footer>
+
+  <!--  Scripts-->
+  <script src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+  <script>
+  setInterval(function(){
+    // read data from database
+    $.get('/live/refresh',function(data) {
+        var object= JSON.parse(data);
+        $("#current_flux").text(object.current_flux.toFixed(1));
+        $("#current_humidity").text(object.current_humidity.toFixed(1));
+        $("#current_light_on_off").text(object.current_light_on_off);
+        $("#current_temperature").text(object.current_temperature.toFixed(1));
+        $("#my_date").text(object.datetime_info.date);
+        $("#my_time").text(object.datetime_info.time);
+        $("#my_city").text(object.datetime_info.city);
+    });
+  }, 1000);
+
+  function switchLight() {
+      var l_switch = $("#current_light_on_off").text();
+      var param = (l_switch == "OFF") ? "ON" : "OFF";
+
+      $.get('/switch_light/' + param,function(data) {
+
+      });
+  }
+  </script>
+
+  </body>
+</html>
